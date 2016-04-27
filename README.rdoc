@@ -1,0 +1,165 @@
+== README
+
+This project is part of the assignment task used for recruiting of new members for our dev-team.
+If you are interested or have been invited to work with us, please read on and try to answer the questions below.
+
+The project integrates some of the basic structures used by fubalytics.
+It basically implements only a single dummy view (player/index), which is designed to demonstrate the usage
+of backbone-js, handlebars and gon.
+In order to set it up, you will probably like to setup rvm first.
+
+
+== Questions
+
+=== 1. Handlebars
+
+* Where are the handlebar templates stored?
+Ans: app -> assets -> javascripts -> templates -> template_name.hbs
+
+
+
+* How are they used?
+Ans: 
+
+Add gem 'handlebars_assets' in Gemfile
+Add handlebars js in application.js like 
+//= require handlebars.runtime
+OR
+//= require handlebars # If you need to compile your JavaScript templates in the browse
+give the template storage source directory path	which holds your hbs templates.
+//= require_tree ./templates 
+# Here we define players.js whcih referes the resource players we can use like create a folder players and make templates like index.hbs, other.hbs
+
+templates/
+  players/
+    index.hbs
+    new.hbs
+    edit.hbs
+    show.hbs
+
+* Why isnt it possible to inject rails-variables such as <%= @player.name %> ?
+Ans: 
+
+The Reason of can not inject rails-variables, Handlebar template don't allows to directly access rails variable. it is only .hbs and not associate with erb embeded ruby handler define for views. To use rails variable used .hbs.erb so it will reflect your code otherwise i will show html. like <%= @player.name %> we have to also used gem 'gon' which allows rails variables in javascript.
+
+
+=== 2. I18n
+
+* How is I18n used?
+Ans:
+
+To used I18 we can define variables in en.yml, es.yml like 
+	in config/locales/en.yml
+	en:
+		hello: "Hello World"
+		index:
+			first: "first"
+	in config/locales/es.yml
+	es:
+		hello: "Holla"
+		index:
+			first: "" 		
+	and to used in view players/index.html.erb
+	<%= t('hello') %>
+	<%= t :hello %>
+	<%= t('index.first') %>
+			
+
+* How is it integrated into the handlebars templates?
+Ans: 
+
+
+add gem "i18n-js" in gem file
+
+#add in application.js
+
+//= require i18n.js
+
+//= require i18n/translations
+create a file i18n-js.yaml file in initializer
+
+put below code in i18n-js.yaml
+
+================================================
+
+fallbacks: :de
+
+translations:
+- file: "public/javascripts/i18n/%{locale}.js"
+  only: '*'
+
+==================================================
+
+only : '*' it specifies that all languages will be exported. if you want to export single language
+used like 
+only: 'en.*'
+
+If you specify the fallbacks option, you will be able to fill missing translations with those inside fallback locale(s).
+Default value is true.
+
+file define the path of your translation file 
+
+use {{I18n "hello"}} in template_name.hbs
+
+
+=== 3. Backbone-js
+
+* Where are the backbone-js views located?
+Ans: 
+
+This file structure create when used 
+create directory while rails generate backbone:install
+app/assets/javascripts/views
+create file rails generate backbone:scaffold NAME
+app/assets/javascripts/views/names
+
+names
+│           └── names_index.js.coffee	
+
+
+but in this app we define simple_project.js.coffee and write below code
+
+#= require_self
+#= require_tree ./templates
+#= require_tree ./models
+#= require_tree ./views
+#= require_tree ./routers
+
+window.SimpleProject =
+  Models: {}
+  Collections: {}
+  Routers: {}
+  Views: {}
+
+  for define views for the backbone js.
+
+* How is the class definition separated from the initialization?
+Ans: 
+
+we can define models in backbone using class defination like 
+
+var Sample = Backbone.Model.extend({
+  initialize: function() {
+  }
+},{
+  message: "No message has been set",
+  setMessage: function(value) {
+    this.message = value;
+  }
+});
+ and in initialization is used to define a function in backbone
+
+* How does the $(".players.index").ready(...) work?
+
+Ans: 
+
+create a variable app for define backbone application like we define in angular js.
+create a variable for the app app.players_index for contains the contents from controller using gon gem and load these contents for .players.index which used for players.hbs by useing ready function.
+
+
+=== 4. Add a logo 
+
+Please extend the players table by the logo. Add a button to the right of "hide me" and call it "show". When the user clicks on the "show" button, display the logo inside a new "td" element of the "tr" table row.
+
+Ans: Done Please review.
+
